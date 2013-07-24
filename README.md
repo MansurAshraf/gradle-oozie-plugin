@@ -1,0 +1,1 @@
+Because oozie xml hell sucks
