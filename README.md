@@ -1,1 +1,3 @@
-Because oozie xml hell sucks
+
+Gradle based DSL for Apache oozie workflow
+
