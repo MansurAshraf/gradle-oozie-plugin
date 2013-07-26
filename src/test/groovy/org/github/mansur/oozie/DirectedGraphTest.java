@@ -18,6 +18,7 @@ package org.github.mansur.oozie;
 
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
