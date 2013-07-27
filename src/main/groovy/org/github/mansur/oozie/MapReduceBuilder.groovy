@@ -34,9 +34,11 @@ class MapReduceBuilder extends BaseBuilder {
                 addPrepareNodes(xml, (List<String>) map.get(DELETE), (List<String>) map.get(MKDIR))
                 addNode(map, xml, 'job-xml', JOB_XML)
                 xml.configuration { addConfiguration(xml, map) }
-                addList(xml,map,FILE,FILE)
-                addList(xml,map,ARCHIVE,ARCHIVE)
+                addList(xml, map, FILE, FILE)
+                addList(xml, map, ARCHIVE, ARCHIVE)
             }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
         }
     }
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright 2013. Muhammad Ashraf
+ *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
@@ -13,28 +14,18 @@
  *    limitations under the License.
  */
 
+package org.github.mansur.oozie.beans
 
-
-
-
-apply plugin: "java"
-apply plugin: "groovy"
-
-version = '0.1'
-group = "org.github.mansur.oozie"
-
-repositories {
-    mavenCentral()
-}
-dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    testCompile 'junit:junit:4.11'
-    testCompile "org.easytesting:fest-assert-core:2.0M10",
-            testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
-                exclude group: "org.codehaus.groovy"
-            }
-    testCompile 'xmlunit:xmlunit:1.4'
-
-
+/**
+ * @author Muhammad Ashraf
+ * @since 7/23/13
+ */
+class Workflow {
+    String name
+    String start
+    String end
+    String namespace
+    HashMap<String, Object> common
+    HashMap<String, Object> jobXML
+    List<HashMap<String, Object>> actions
 }

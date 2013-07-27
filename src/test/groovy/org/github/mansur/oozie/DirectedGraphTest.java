@@ -18,7 +18,6 @@ package org.github.mansur.oozie;
 
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -31,10 +30,10 @@ public class DirectedGraphTest {
 
     @Test
     public void testSort() throws Exception {
-        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1");
-        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2");
-        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3");
-        final DirectedGraph.Node node4 = new DirectedGraph.Node("node4");
+        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1", "typeo");
+        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2", "type");
+        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3", "type");
+        final DirectedGraph.Node node4 = new DirectedGraph.Node("node4", "type");
         node1.addEdge(node2);
         node2.addEdge(node3);
         node3.addEdge(node4);
@@ -47,7 +46,7 @@ public class DirectedGraphTest {
 
     @Test
     public void testOneNodeFlow() throws Exception {
-        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1");
+        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1", "type");
 
         final DirectedGraph directedGraph = new DirectedGraph();
         directedGraph.addNodes(node1);
@@ -58,10 +57,10 @@ public class DirectedGraphTest {
 
     @Test(expected = IllegalStateException.class)
     public void testMultipleHeads() throws Exception {
-        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1");
-        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2");
-        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3");
-        final DirectedGraph.Node node4 = new DirectedGraph.Node("node4");
+        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1", "type");
+        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2", "type");
+        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3", "type");
+        final DirectedGraph.Node node4 = new DirectedGraph.Node("node4", "type");
         node2.addEdge(node3);
         node3.addEdge(node4);
 
@@ -72,9 +71,9 @@ public class DirectedGraphTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCyclicGraph() throws Exception {
-        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1");
-        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2");
-        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3");
+        final DirectedGraph.Node node1 = new DirectedGraph.Node("node1", "type");
+        final DirectedGraph.Node node2 = new DirectedGraph.Node("node2", "type");
+        final DirectedGraph.Node node3 = new DirectedGraph.Node("node3", "type");
         node1.addEdge(node2);
         node2.addEdge(node3);
         node3.addEdge(node2);

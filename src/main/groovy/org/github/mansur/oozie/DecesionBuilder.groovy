@@ -20,22 +20,22 @@ import groovy.xml.MarkupBuilder
 
 /**
  * @author Muhammad Ashraf
- * @since 7/24/13
+ * @since 7/25/13
  */
-class SSHBuilder extends BaseBuilder {
+class DecesionBuilder extends BaseBuilder {
+
 
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
-        xml.action(name: map.get(NAME)) {
-            'ssh' {
-                addNode(map, xml, HOST, HOST)
-                addNode(map, xml, COMMAND, COMMAND)
-                addList(xml, map, ARGS, ARGS)
-                addCaptureOutput(xml, map)
-
+        xml.decision(name: map.get(NAME)) {
+            'switch' {
+                def cases = map.get("switch")
+                cases.each { c ->
+                    xml.case(to: c.get("to"), c.get("if"))
+                }
+                def defaultcase = map.get("default")
+                xml.'default'(to: defaultcase)
             }
-            addOkOrError(xml, map, "ok")
-            addOkOrError(xml, map, "error")
         }
     }
 }

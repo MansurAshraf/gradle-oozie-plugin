@@ -37,13 +37,14 @@ abstract class BaseBuilder {
     public static final String SCRIPT = 'script'
     public static final String HOST = 'host'
     public static final String COMMAND = 'command'
-    public static final String ARGS = "arg"
+    public static final String ARGS = "args"
     public static final String MOVE = "move"
     public static final String CHMOD = "chmod"
     public static final String MAIN_CLASS = "mainClass"
     public static final String JAVA_OPTS = "javaOpts"
     public static final String EXEC = 'exec'
     public static final String ENV_VAR = "envVar"
+    public static final String MESSAGE = "message"
 
 
     protected HashMap<String, Object> getMergedProperties(HashMap<String, Object> common, HashMap<String, Object> action) {
@@ -98,8 +99,12 @@ abstract class BaseBuilder {
     }
 
     def addCaptureOutput(MarkupBuilder xml, HashMap<String, Object> map) {
-        if (map.containsKey("captureOutput")) {
-            xml.'capture-output'
+        if (map.containsKey("captureOutput") && map.get("captureOutput") == true) {
+            xml.'capture-output'()
         }
+    }
+
+    def addOkOrError(MarkupBuilder xml, HashMap<String, Object> map, String node) {
+        xml."$node"(to: map.get(node))
     }
 }

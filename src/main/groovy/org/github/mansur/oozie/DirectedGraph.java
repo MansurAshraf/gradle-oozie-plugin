@@ -34,25 +34,45 @@ public class DirectedGraph {
     }
 
     private void add(final Node node, final ArrayList<Node> result) {
+        if (result.contains(node)) {
+            result.remove(node);
+            for (final Edge edge : node.outEdge) {
+                remove(edge.to, result);
+            }
+        }
+
         result.add(node);
-        if (node.outEdge != null) {
+        if (!node.outEdge.isEmpty()) {
             checkCyclic(node, result);
-            add(node.outEdge.to, result);
+            for (final Edge edge : node.outEdge) {
+                add(edge.to, result);
+            }
+
         }
 
     }
 
+    private void remove(final Node n, final ArrayList<Node> result) {
+        result.remove(n);
+        final HashSet<Edge> outEdge = n.outEdge;
+        for (final Edge edge : outEdge) {
+            remove(edge.to, result);
+        }
+    }
+
     private void checkCyclic(final Node node, final ArrayList<Node> result) {
-        final Node to = node.outEdge.to;
-        if (result.contains(to)) {
-            throw new IllegalStateException(String.format("Workflow is cyclic [%s,%s]", node.toString(), to.toString()));
+        if (!node.outEdge.isEmpty()
+                && result.contains(node.outEdge.iterator().next().to)
+                && !node.outEdge.iterator().next().to.type.equals("join")
+                && !node.outEdge.iterator().next().to.type.equals("kill")) {
+            throw new IllegalStateException(String.format("Workflow is cyclic [%s,%s]", node.toString(), node.outEdge.iterator().next().to));
         }
     }
 
     private Node findHead() {
         final HashSet<Node> nodes = new HashSet<Node>();
         for (final Node n : this.nodes) {
-            if (n.inEdges == null) {
+            if (n.inEdges.size() == 0) {
                 nodes.add(n);
             }
         }
@@ -67,18 +87,20 @@ public class DirectedGraph {
     }
 
     public static class Node {
-        public final String name;
-        public Edge inEdges;
-        public Edge outEdge;
+        private final String name;
+        private final String type;
+        private final HashSet<Edge> inEdges = new HashSet<Edge>();
+        private final HashSet<Edge> outEdge = new HashSet<Edge>();
 
-        public Node(final String name) {
+        public Node(final String name, final String type) {
             this.name = name;
+            this.type = type;
         }
 
         public Node addEdge(final Node node) {
             final Edge e = new Edge(this, node);
-            outEdge = e;
-            node.inEdges = e;
+            outEdge.add(e);
+            node.inEdges.add(e);
             return this;
         }
 

@@ -26,12 +26,14 @@ class FSBuilder extends BaseBuilder {
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
         xml.action(name: map.get(NAME)) {
-            'fs'{
+            'fs' {
                 addDeleteOrDir(xml, map.get(DELETE), DELETE)
                 addDeleteOrDir(xml, map.get(MKDIR), MKDIR)
                 addMove(xml, map.get(MOVE))
-                addChmod(xml,map.get(CHMOD))
+                addChmod(xml, map.get(CHMOD))
             }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
         }
     }
 
@@ -46,7 +48,7 @@ class FSBuilder extends BaseBuilder {
     private def addChmod(MarkupBuilder xml, List<HashMap<String, String>> nodes) {
         if (nodes != null) {
             nodes.each {
-                xml.chmod(path: it.get("path"), permission: it.get("permission"), 'dir-files': it.get("dir_files"))
+                xml.chmod(path: it.get("path"), permissions: it.get("permissions"), 'dir-files': it.get("dir_files"))
             }
         }
     }

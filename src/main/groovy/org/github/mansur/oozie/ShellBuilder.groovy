@@ -27,19 +27,23 @@ class ShellBuilder extends BaseBuilder {
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
         xml.action(name: map.get(NAME)) {
-            'shell'(xmlns: "uri:oozie:shell-action:0.1") {
+            shell(xmlns: "uri:oozie:shell-action:0.1") {
                 addNode(map, xml, 'job-tracker', JOB_TRACKER)
                 addNode(map, xml, 'name-node', NAME_NODE)
                 addPrepareNodes(xml, (List<String>) map.get(DELETE), (List<String>) map.get(MKDIR))
                 addNode(map, xml, 'job-xml', JOB_XML)
                 xml.configuration { addConfiguration(xml, map) }
                 addNode(map, xml, EXEC, EXEC)
-                addList(xml, map, 'argument', ARGS)
+                addList(xml, map, "argument", ARGS)
                 addList(xml, map, 'env-var', ENV_VAR)
                 addList(xml, map, FILE, FILE)
                 addList(xml, map, ARCHIVE, ARCHIVE)
-                addCaptureOutput(xml,map)
+                addCaptureOutput(xml, map)
             }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
         }
     }
+
+
 }

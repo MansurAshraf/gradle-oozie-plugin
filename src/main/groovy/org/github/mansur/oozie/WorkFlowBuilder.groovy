@@ -17,8 +17,8 @@
 package org.github.mansur.oozie
 
 import com.google.common.base.Preconditions
-import org.github.mansur.oozie.beans.Workflow
 import groovy.xml.MarkupBuilder
+import org.github.mansur.oozie.beans.Workflow
 
 /**
  * @author Muhammad Ashraf
@@ -31,6 +31,11 @@ class WorkFlowBuilder {
             "ssh": new SSHBuilder(),
             "mapreduce": new MapReduceBuilder(),
             "shell": new ShellBuilder(),
+            "fork": new ForkBuilder(),
+            "join": new JoinBuilder(),
+            "decision": new DecesionBuilder(),
+            "pig": new PigBuilder(),
+            "kill": new KillBuilder()
     ]
 
     def String buildWorkflow(Workflow wf) {
@@ -39,12 +44,14 @@ class WorkFlowBuilder {
         def writer = new StringWriter()
         def workflow = new MarkupBuilder(writer)
         workflow.'workflow-app'('xmlns': "xmlns=$wf.namespace", name: "$wf.name") {
+            start(to: wf.start)
             graph.each {
                 def action = findAction(it.toString(), actions)
                 def type = action.get("type")
                 def builder = findBuilder(type)
                 builder.buildXML(workflow, action, wf.common)
             }
+            end(name: wf.end)
         }
         writer.toString()
     }
@@ -58,17 +65,59 @@ class WorkFlowBuilder {
         def graph = new DirectedGraph();
         HashMap<String, DirectedGraph.Node> nodesMap = getNodeMap(actions)
         def nodes = nodesMap.values()
-        nodes.each {
-            def nodeName = it.toString()
+        nodes.each { n ->
+            def nodeName = n.toString()
             def action = findAction(nodeName, actions)
-            def toNodeName = action.get("ok")
-            def toNode = nodesMap.get(toNodeName)
-            if (toNode != null) {
-                it.addEdge(toNode)
+            def type = action.get("type")
+            if (type == "fork") {
+                handleFork(action, nodesMap, n)
+            } else if (type == "join") {
+                handleJoin(action, nodesMap, n)
+            } else if (type == "decision") {
+                handleDecision(action, nodesMap, n)
+            } else {
+                def toNodeName = action.get("ok")
+                def toNode = nodesMap.get(toNodeName)
+                if (toNode != null) {
+                    n.addEdge(toNode)
+                }
+                def fail = action.get("error")
+                def failNode = nodesMap.get(fail)
+                if (failNode != null) {
+                    n.addEdge(failNode)
+                }
             }
-            graph.addNode(it)
+            graph.addNode(n)
         }
         graph.sort()
+    }
+
+    private void handleDecision(HashMap<String, Object> action, HashMap<String, DirectedGraph.Node> nodesMap, n) {
+        action.get("switch")?.each { c ->
+            def to = c.get("to")
+            def toNode = nodesMap.get(to)
+            if (toNode != null) {
+                n.addEdge(toNode)
+            }
+        }
+    }
+
+    private void handleJoin(HashMap<String, Object> action, HashMap<String, DirectedGraph.Node> nodesMap, DirectedGraph.Node n) {
+        def to = action.get("to")
+        def toNode = nodesMap.get(to)
+        if (toNode != null) {
+            n.addEdge(toNode)
+        }
+    }
+
+    private void handleFork(HashMap<String, Object> action, HashMap<String, DirectedGraph.Node> nodesMap, n) {
+        def paths = action.get("paths")
+        paths?.each { p ->
+            def toNode = nodesMap.get(p)
+            if (toNode != null) {
+                n.addEdge(toNode)
+            }
+        }
     }
 
     private HashMap<String, Object> findAction(String name, List<HashMap<String, Object>> actions) {
@@ -87,8 +136,9 @@ class WorkFlowBuilder {
         def nodesMap = new HashMap<String, DirectedGraph.Node>()
         actions.each {
             String name = it.get("name")
+            def type = it.get("type")
             Preconditions.checkArgument(name != null && name.length() > 1, "Found action without a name!")
-            def node = new DirectedGraph.Node(name)
+            def node = new DirectedGraph.Node(name, type)
             nodesMap.put(name, node)
         }
         nodesMap

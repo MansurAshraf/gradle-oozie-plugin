@@ -38,6 +38,8 @@ class PigBuilder extends BaseBuilder {
                 addNode(map, xml, FILE, FILE)
                 addNode(map, xml, ARCHIVE, ARCHIVE)
             }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
         }
     }
 
