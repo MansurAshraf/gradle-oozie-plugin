@@ -13,8 +13,22 @@ buildscript {
 
 }
 
+
 apply plugin: 'java'
 apply plugin: 'oozie'
+
+
+repositories {
+    maven {
+        url "https://github.com/MuhammadAshraf/gradle-oozie-plugin/raw/master/repo"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.github.mansur.oozie:gradle-oozie-plugin:0.1'
+
+}
 
 oozie {
     def jobTracker = "http://jobtracker"

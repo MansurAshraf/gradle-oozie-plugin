@@ -21,8 +21,18 @@ apply plugin: "java"
 apply plugin: "groovy"
 apply plugin: 'maven'
 
-version = '0.1'
 group = "org.github.mansur.oozie"
+
+configurations {
+    deployerJars
+}
+ext {
+    cloudbees = [:]
+}
+cloudbees += [
+        user_name: "$System.env.cb_username",
+        password: "$System.env.cb_password"
+]
 
 repositories {
     mavenCentral()
@@ -34,6 +44,7 @@ dependencies {
     testCompile "org.easytesting:fest-assert-core:2.0M10",
             testCompile('org.spockframework:spock-core:0.7-groovy-1.8')
     testCompile 'xmlunit:xmlunit:1.4'
+    deployerJars 'org.apache.maven.wagon:wagon-webdav:1.0-beta-2'
 
 }
 uploadArchives {
@@ -41,6 +52,16 @@ uploadArchives {
         mavenDeployer {
             repository(url: "file://$projectDir/../repo")
         }
+    }
+}
+uploadArchives {
+    repositories.mavenDeployer {
+        def configureAuth = {
+            authentication(userName: cloudbees.user_name, password: cloudbees.password)
+        }
+        configuration = configurations.deployerJars
+        repository(url: "dav:https://repository-uncommon-configuration.forge.cloudbees.com/release/", configureAuth)
+        snapshotRepository(url: "dav:https://repository-uncommon-configuration.forge.cloudbees.com/snapshot/", configureAuth)
     }
 }
 
