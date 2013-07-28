@@ -1,6 +1,5 @@
 package org.github.mansur.oozie.tasks
 
-import org.apache.commons.io.FileUtils
 import org.github.mansur.oozie.beans.Workflow
 import org.github.mansur.oozie.builders.WorkFlowBuilder
 import org.gradle.api.DefaultTask
@@ -35,21 +34,41 @@ class OozieWorkflowTask extends DefaultTask {
 
     private void generateWorkflow() {
         def wf = new Workflow()
-        wf.name = workflowName
-        wf.start = start
-        wf.end = end
-        wf.namespace = namespace
-        wf.jobXML = jobXML
-        wf.actions = workflowActions
-        String xml
+        wf.name = getWorkflowName()
+        wf.start = getStart()
+        wf.end = getEnd()
+        wf.namespace = getNamespace()
+        wf.jobXML = this.getJobXML()
+        wf.actions = getWorkflowActions()
+        wf.common = getCommon()
         def builder = new WorkFlowBuilder()
+        generateFlow(builder, wf)
+        generateJobXML(builder, wf)
+
+    }
+
+    private void generateJobXML(WorkFlowBuilder builder, Workflow wf) {
+        def jobXML = builder.buildJobXML(wf.jobXML)
+        if (jobXML != null) {
+            def outputFile = new File(getOutputDir().absolutePath + File.separator + getWorkflowName() + "-config.xml")
+            outputFile.parentFile.mkdirs()
+            println("generating oozie job xml : file://$outputFile")
+            outputFile.write(jobXML)
+        }
+    }
+
+    private void generateFlow(WorkFlowBuilder builder, Workflow wf) {
+        String xml
+
         try {
             xml = builder.buildWorkflow(wf)
         } catch (Exception e) {
-            throw new GradleException(e.message)
+            throw new GradleException(e.message, e)
         }
-        FileUtils.forceMkdir(outputDir)
-        def outputFile = new File(outputDir.absolutePath + File.separator + workflowName + ".xml")
-        FileUtils.writeStringToFile(outputFile, xml)
+
+        def outputFile = new File(getOutputDir().absolutePath + File.separator + getWorkflowName() + ".xml")
+        outputFile.parentFile.mkdirs()
+        println("generating oozie workflow: file://$outputFile")
+        outputFile.write(xml)
     }
 }

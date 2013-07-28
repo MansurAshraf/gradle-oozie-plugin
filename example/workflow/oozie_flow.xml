@@ -1,11 +1,3 @@
-package org.github.mansur.oozie
-
-/**
- * @author Muhammad Ashraf
- * @since 7/27/13
- */
-class SAMPLE_XML {
-    def static EXPECTED_FLOW = """
 <workflow-app xmlns='xmlns=uri:oozie:workflow:0.1' name='oozie_flow'>
   <start to='start_node' />
   <action name='shell_to_prod'>
@@ -47,10 +39,10 @@ class SAMPLE_XML {
   <action name='move_files'>
     <fs>
       <delete path='hdfs://foo:9000/usr/tucu/temp-data' />
-      <mkdir path='archives/\${wf:id()}' />
-      <move source='\${jobInput}' target='archives/\${wf:id()}/processed-input' />
-      <move source='\${jobInput}' target='archives/\${wf:id()}/raw-input' />
-      <chmod path='\${jobOutput}' permissions='-rwxrw-rw-' dir-files='true' />
+      <mkdir path='archives/${wf:id()}' />
+      <move source='${jobInput}' target='archives/${wf:id()}/processed-input' />
+      <move source='${jobInput}' target='archives/${wf:id()}/raw-input' />
+      <chmod path='${jobOutput}' permissions='-rwxrw-rw-' dir-files='true' />
     </fs>
     <ok to='join_flow' />
     <error to='fail' />
@@ -146,17 +138,3 @@ class SAMPLE_XML {
   </kill>
   <end name='end_node' />
 </workflow-app>
-"""
-
-def static EXPECTED_JOB_XML="""
-<configuration>
-  <property>
-    <name>mapred.map.output.compress</name>
-    <value>false</value>
-  </property>
-  <property>
-    <name>mapred.job.queue.name</name>
-    <value>queuename</value>
-  </property>
-</configuration>"""
-}

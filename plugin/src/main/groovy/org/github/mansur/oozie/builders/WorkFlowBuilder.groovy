@@ -16,7 +16,6 @@
 
 package org.github.mansur.oozie.builders
 
-import com.google.common.base.Preconditions
 import groovy.xml.MarkupBuilder
 import org.github.mansur.oozie.beans.Workflow
 
@@ -54,6 +53,24 @@ class WorkFlowBuilder {
             end(name: wf.end)
         }
         writer.toString()
+    }
+
+    def String buildJobXML(HashMap<String, Object> props) {
+        String result = null;
+        if (!props.isEmpty()) {
+            def writer = new StringWriter()
+            def xml = new MarkupBuilder(writer)
+            xml.configuration {
+                props.each { k, v ->
+                    property {
+                        name(k)
+                        value(v)
+                    }
+                }
+            }
+            result = writer.toString()
+        }
+        result
     }
 
     /**
@@ -137,7 +154,9 @@ class WorkFlowBuilder {
         actions.each {
             String name = it.get("name")
             def type = it.get("type")
-            Preconditions.checkArgument(name != null && name.length() > 1, "Found action without a name!")
+            if (name == null || name.length() <= 0) {
+                throw new IllegalStateException("Found action without a name!")
+            }
             def node = new DirectedGraph.Node(name, type)
             nodesMap.put(name, node)
         }

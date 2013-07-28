@@ -183,4 +183,20 @@ class WorkflowSpecification extends Specification {
         then:
         xmlDiff.similar()
     }
+
+    def "generate job.xml"() {
+        when:
+        def builder = new WorkFlowBuilder()
+        def jobXML = builder.buildJobXML([
+                "mapred.map.output.compress": "false",
+                "mapred.job.queue.name": "queuename"
+        ])
+
+       then:
+       XMLUnit.setIgnoreWhitespace(true)
+        def xmlDiff = new Diff(jobXML, SAMPLE_XML.EXPECTED_JOB_XML)
+        xmlDiff.similar()
+
+
+    }
 }

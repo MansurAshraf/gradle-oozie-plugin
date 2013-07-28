@@ -1,5 +1,10 @@
 package org.github.mansur.oozie
 
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
+import org.custommonkey.xmlunit.Diff
+import org.custommonkey.xmlunit.XMLUnit
+import org.github.mansur.oozie.plugin.OozieWorkflowPlugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
@@ -10,7 +15,7 @@ import spock.lang.Specification
  * @since 7/27/13
  */
 class OozieWorkflowPluginSpec extends Specification {
-    static final TASK_NAME = "oozieTask"
+
     static final String EXTENSION_NAME = 'oozie'
     Project project
 
@@ -20,7 +25,7 @@ class OozieWorkflowPluginSpec extends Specification {
 
     def "Apply oozie plugin"() {
         expect:
-        project.tasks.findByName(TASK_NAME) == null
+        project.tasks.findByName(OozieWorkflowPlugin.TASK_NAME) == null
 
         when:
         project.apply plugin: 'oozie'
@@ -199,12 +204,18 @@ class OozieWorkflowPluginSpec extends Specification {
 
         then:
         project.extensions.findByName(EXTENSION_NAME) != null
-        Task task = project.tasks.findByName(TASK_NAME)
+        Task task = project.tasks.findByName(OozieWorkflowPlugin.TASK_NAME)
         task.start == "start_node"
         task.end == "end_node"
         task.workflowName == 'oozie_flow'
         task.namespace == 'uri:oozie:workflow:0.1'
         task.common.size() == 3
         task.workflowActions.size() == 9
+
+        and:
+        task.start()
+        def xml=new File("$project.buildDir/oozie_flow.xml")
+        xml.exists()
+
     }
 }

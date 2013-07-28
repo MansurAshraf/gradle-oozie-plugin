@@ -12,7 +12,7 @@ import org.gradle.api.Project
 class OozieWorkflowPlugin implements Plugin<Project> {
 
     static final String EXTENSION_NAME = 'oozie'
-    static final TASK_NAME = "oozieTask"
+    public static final TASK_NAME = "oozieWorkflow"
 
     @Override
     void apply(Project project) {
@@ -25,13 +25,13 @@ class OozieWorkflowPlugin implements Plugin<Project> {
         project.tasks.withType(OozieWorkflowTask).whenTaskAdded { OozieWorkflowTask task ->
             def ext = project.extensions.findByName(EXTENSION_NAME)
             task.conventionMapping.workflowActions = { ext.actions }
-            task.conventionMapping.common = { ext.common }
+            task.conventionMapping.common = { ext.common == null ? [:] : ext.common }
             task.conventionMapping.start = { ext.start }
             task.conventionMapping.end = { ext.end }
             task.conventionMapping.workflowName = { ext.name }
             task.conventionMapping.namespace = { ext.namespace }
-            task.conventionMapping.jobXML = { ext.jobXML }
-            task.conventionMapping.outputDir = { ext.outputDir }
+            task.conventionMapping.jobXML = { ext.jobXML == null ? [:] : ext.jobXML }
+            task.conventionMapping.outputDir = { ext.outputDir == null ? project.buildDir : ext.outputDir }
         }
     }
 }
