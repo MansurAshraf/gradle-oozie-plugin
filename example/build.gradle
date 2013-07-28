@@ -1,0 +1,15 @@
+buildscript {
+    repositories {
+        maven { url "file://$projectDir/../../repo" }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath: 'org.github.mansur.oozie:gradle-oozie-plugin:0.1'
+    }
+
+}
+
+apply plugin: 'java'
+apply plugin: 'oozie'
+ 
