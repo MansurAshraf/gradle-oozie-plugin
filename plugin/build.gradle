@@ -28,12 +28,10 @@ repositories {
 }
 dependencies {
     compile gradleApi()
-    compile localGroovy()
+    compile "org.codehaus.groovy:groovy-all:2.0.6"
     testCompile 'junit:junit:4.11'
     testCompile "org.easytesting:fest-assert-core:2.0M10",
-            testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
-                exclude group: "org.codehaus.groovy"
-            }
+            testCompile('org.spockframework:spock-core:0.7-groovy-1.8')
     testCompile 'xmlunit:xmlunit:1.4'
 
 
