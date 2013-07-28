@@ -22,18 +22,16 @@ class OozieWorkflowPlugin implements Plugin<Project> {
     }
 
     private void addTask(Project project) {
-        project.afterEvaluate {
-            project.tasks.withType(OozieWorkflowTask).whenTaskAdded { task ->
-                def ext = project.extensions.findByName(EXTENSION_NAME)
-                task.conventionMapping.actions = { ext.actions }
-                task.conventionMapping.common = { ext.common }
-                task.conventionMapping.start = { ext.start }
-                task.conventionMapping.end = { ext.end }
-                task.conventionMapping.name = { ext.name }
-                task.conventionMapping.namespace = { ext.namespace }
-                task.conventionMapping.jobXML = { ext.jobXML }
-                task.conventionMapping.outputDir = { ext.outputDir }
-            }
+        project.tasks.withType(OozieWorkflowTask).whenTaskAdded { OozieWorkflowTask task ->
+            def ext = project.extensions.findByName(EXTENSION_NAME)
+            task.conventionMapping.workflowActions = { ext.actions }
+            task.conventionMapping.common = { ext.common }
+            task.conventionMapping.start = { ext.start }
+            task.conventionMapping.end = { ext.end }
+            task.conventionMapping.workflowName = { ext.name }
+            task.conventionMapping.namespace = { ext.namespace }
+            task.conventionMapping.jobXML = { ext.jobXML }
+            task.conventionMapping.outputDir = { ext.outputDir }
         }
     }
 }

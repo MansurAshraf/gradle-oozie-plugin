@@ -78,9 +78,9 @@ public class DirectedGraph {
         }
 
         if (nodes.size() > 1) {
-            throw new IllegalStateException("Multiple Heads Founds!" + nodes.toString());
+            throw new IllegalStateException("Multiple Starting nodes Founds!" + nodes.toString());
         } else if (nodes.isEmpty()) {
-            throw new IllegalStateException("No Head Founds!");
+            throw new IllegalStateException("No Starting node Found!");
         }
 
         return nodes.iterator().next();

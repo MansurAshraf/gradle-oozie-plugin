@@ -174,9 +174,9 @@ class WorkflowSpecification extends Specification {
         workflow.name = 'oozie_flow'
         workflow.namespace = 'uri:oozie:workflow:0.1'
 
-        println(workflow)
         def builder = new WorkFlowBuilder()
         def result = builder.buildWorkflow(workflow)
+
         XMLUnit.setIgnoreWhitespace(true)
         def xmlDiff = new Diff(result, SAMPLE_XML.EXPECTED_FLOW)
 
