@@ -3,6 +3,7 @@ package org.github.mansur.oozie
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 import org.github.mansur.oozie.beans.Workflow
+import org.github.mansur.oozie.builders.WorkFlowBuilder
 import spock.lang.Specification
 
 /**
@@ -12,6 +13,7 @@ import spock.lang.Specification
 class WorkflowSpecification extends Specification {
 
     def "WorkFlow dsl should be able to create a valid oozie xml Spec"() {
+        when:
         def jobTracker = "http://jobtracker"
         def namenode = "http://namenode"
 
@@ -178,7 +180,7 @@ class WorkflowSpecification extends Specification {
         XMLUnit.setIgnoreWhitespace(true)
         def xmlDiff = new Diff(result, SAMPLE_XML.EXPECTED_FLOW)
 
-        expect:
+        then:
         xmlDiff.similar()
     }
 }

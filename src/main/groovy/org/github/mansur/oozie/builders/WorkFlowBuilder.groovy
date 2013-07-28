@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import com.google.common.base.Preconditions
 import groovy.xml.MarkupBuilder

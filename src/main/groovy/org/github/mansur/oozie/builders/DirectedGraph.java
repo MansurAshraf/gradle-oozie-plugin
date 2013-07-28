@@ -1,4 +1,4 @@
-package org.github.mansur.oozie;
+package org.github.mansur.oozie.builders;
 
 import java.util.ArrayList;
 import java.util.Collections;

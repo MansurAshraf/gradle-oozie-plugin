@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
@@ -22,16 +22,11 @@ import groovy.xml.MarkupBuilder
  * @author Muhammad Ashraf
  * @since 7/25/13
  */
-class ForkBuilder extends BaseBuilder {
+class JoinBuilder extends BaseBuilder {
 
 
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
-        xml.fork(name: map.get(NAME)) {
-            def paths = map.get("paths")
-            paths.each {
-                xml.path(start: it.toString())
-            }
-        }
+        xml.join(name: map.get(NAME), to: map.get("to"))
     }
 }

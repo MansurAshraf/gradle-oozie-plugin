@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
@@ -22,20 +22,35 @@ import groovy.xml.MarkupBuilder
  * @author Muhammad Ashraf
  * @since 7/24/13
  */
-class SSHBuilder extends BaseBuilder {
-
+class FSBuilder extends BaseBuilder {
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
         xml.action(name: map.get(NAME)) {
-            'ssh' {
-                addNode(map, xml, HOST, HOST)
-                addNode(map, xml, COMMAND, COMMAND)
-                addList(xml, map, ARGS, ARGS)
-                addCaptureOutput(xml, map)
-
+            'fs' {
+                addDeleteOrDir(xml, map.get(DELETE), DELETE)
+                addDeleteOrDir(xml, map.get(MKDIR), MKDIR)
+                addMove(xml, map.get(MOVE))
+                addChmod(xml, map.get(CHMOD))
             }
             addOkOrError(xml, map, "ok")
             addOkOrError(xml, map, "error")
         }
     }
+
+    private def addMove(MarkupBuilder xml, List<HashMap<String, String>> nodes) {
+        if (nodes != null) {
+            nodes.each {
+                xml.move(source: it.get("source"), target: it.get("target"))
+            }
+        }
+    }
+
+    private def addChmod(MarkupBuilder xml, List<HashMap<String, String>> nodes) {
+        if (nodes != null) {
+            nodes.each {
+                xml.chmod(path: it.get("path"), permissions: it.get("permissions"), 'dir-files': it.get("dir_files"))
+            }
+        }
+    }
+
 }

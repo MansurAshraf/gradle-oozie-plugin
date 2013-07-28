@@ -14,28 +14,31 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
 /**
  * @author Muhammad Ashraf
- * @since 7/25/13
+ * @since 7/24/13
  */
-class DecesionBuilder extends BaseBuilder {
+class MapReduceBuilder extends BaseBuilder {
 
 
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
-        xml.decision(name: map.get(NAME)) {
-            'switch' {
-                def cases = map.get("switch")
-                cases.each { c ->
-                    xml.case(to: c.get("to"), c.get("if"))
-                }
-                def defaultcase = map.get("default")
-                xml.'default'(to: defaultcase)
+        xml.action(name: map.get(NAME)) {
+            'map-reduce' {
+                addNode(map, xml, 'job-tracker', JOB_TRACKER)
+                addNode(map, xml, 'name-node', NAME_NODE)
+                addPrepareNodes(xml, (List<String>) map.get(DELETE), (List<String>) map.get(MKDIR))
+                addNode(map, xml, 'job-xml', JOB_XML)
+                xml.configuration { addConfiguration(xml, map) }
+                addList(xml, map, FILE, FILE)
+                addList(xml, map, ARCHIVE, ARCHIVE)
             }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
         }
     }
 }

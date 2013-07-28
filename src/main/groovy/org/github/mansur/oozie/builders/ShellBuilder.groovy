@@ -14,43 +14,36 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
 /**
  * @author Muhammad Ashraf
- * @since 7/24/13
+ * @since 7/25/13
  */
-class FSBuilder extends BaseBuilder {
+class ShellBuilder extends BaseBuilder {
+
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
         xml.action(name: map.get(NAME)) {
-            'fs' {
-                addDeleteOrDir(xml, map.get(DELETE), DELETE)
-                addDeleteOrDir(xml, map.get(MKDIR), MKDIR)
-                addMove(xml, map.get(MOVE))
-                addChmod(xml, map.get(CHMOD))
+            shell(xmlns: "uri:oozie:shell-action:0.1") {
+                addNode(map, xml, 'job-tracker', JOB_TRACKER)
+                addNode(map, xml, 'name-node', NAME_NODE)
+                addPrepareNodes(xml, (List<String>) map.get(DELETE), (List<String>) map.get(MKDIR))
+                addNode(map, xml, 'job-xml', JOB_XML)
+                xml.configuration { addConfiguration(xml, map) }
+                addNode(map, xml, EXEC, EXEC)
+                addList(xml, map, "argument", ARGS)
+                addList(xml, map, 'env-var', ENV_VAR)
+                addList(xml, map, FILE, FILE)
+                addList(xml, map, ARCHIVE, ARCHIVE)
+                addCaptureOutput(xml, map)
             }
             addOkOrError(xml, map, "ok")
             addOkOrError(xml, map, "error")
         }
     }
 
-    private def addMove(MarkupBuilder xml, List<HashMap<String, String>> nodes) {
-        if (nodes != null) {
-            nodes.each {
-                xml.move(source: it.get("source"), target: it.get("target"))
-            }
-        }
-    }
-
-    private def addChmod(MarkupBuilder xml, List<HashMap<String, String>> nodes) {
-        if (nodes != null) {
-            nodes.each {
-                xml.chmod(path: it.get("path"), permissions: it.get("permissions"), 'dir-files': it.get("dir_files"))
-            }
-        }
-    }
 
 }

@@ -14,19 +14,28 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
 /**
  * @author Muhammad Ashraf
- * @since 7/25/13
+ * @since 7/24/13
  */
-class JoinBuilder extends BaseBuilder {
-
+class SSHBuilder extends BaseBuilder {
 
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
-        xml.join(name: map.get(NAME), to: map.get("to"))
+        xml.action(name: map.get(NAME)) {
+            'ssh' {
+                addNode(map, xml, HOST, HOST)
+                addNode(map, xml, COMMAND, COMMAND)
+                addList(xml, map, ARGS, ARGS)
+                addCaptureOutput(xml, map)
+
+            }
+            addOkOrError(xml, map, "ok")
+            addOkOrError(xml, map, "error")
+        }
     }
 }

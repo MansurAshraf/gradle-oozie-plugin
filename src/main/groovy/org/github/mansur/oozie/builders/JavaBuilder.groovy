@@ -14,28 +14,29 @@
  *    limitations under the License.
  */
 
-package org.github.mansur.oozie
+package org.github.mansur.oozie.builders
 
 import groovy.xml.MarkupBuilder
 
 /**
  * @author Muhammad Ashraf
- * @since 7/25/13
+ * @since 7/24/13
  */
-class ShellBuilder extends BaseBuilder {
+class JavaBuilder extends BaseBuilder {
+
 
     def buildXML(MarkupBuilder xml, HashMap<String, Object> action, HashMap<String, Object> common) {
         HashMap<String, Object> map = getMergedProperties(common, action)
         xml.action(name: map.get(NAME)) {
-            shell(xmlns: "uri:oozie:shell-action:0.1") {
+            'java' {
                 addNode(map, xml, 'job-tracker', JOB_TRACKER)
                 addNode(map, xml, 'name-node', NAME_NODE)
                 addPrepareNodes(xml, (List<String>) map.get(DELETE), (List<String>) map.get(MKDIR))
                 addNode(map, xml, 'job-xml', JOB_XML)
                 xml.configuration { addConfiguration(xml, map) }
-                addNode(map, xml, EXEC, EXEC)
-                addList(xml, map, "argument", ARGS)
-                addList(xml, map, 'env-var', ENV_VAR)
+                addNode(map, xml, 'main-class', MAIN_CLASS)
+                addNode(map, xml, 'java-opts', JAVA_OPTS)
+                addList(xml, map, "arg", ARGS)
                 addList(xml, map, FILE, FILE)
                 addList(xml, map, ARCHIVE, ARCHIVE)
                 addCaptureOutput(xml, map)
@@ -44,6 +45,4 @@ class ShellBuilder extends BaseBuilder {
             addOkOrError(xml, map, "error")
         }
     }
-
-
 }

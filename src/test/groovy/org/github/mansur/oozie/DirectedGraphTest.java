@@ -16,6 +16,7 @@
 
 package org.github.mansur.oozie;
 
+import org.github.mansur.oozie.builders.DirectedGraph;
 import org.junit.Test;
 
 import java.util.List;
