@@ -132,20 +132,12 @@ class WorkflowSpecification extends Specification {
                 name: "first_map_reduce",
                 type: "mapreduce",
                 delete: ["${jobTracker}/pattern"],
-                mainClass: "some.random.class",
                 jobXML: "job.xml",
                 ok: "end",
                 error: "fail",
                 configuration: [
                         "mapred.map.output.compress": "false",
                         "mapred.job.queue.name": "queuename"
-                ],
-                args: [
-                        "--input",
-                        "/cart",
-                        "--output",
-                        "--maxheapSize",
-                        "50"
                 ]
         ]
 

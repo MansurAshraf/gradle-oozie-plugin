@@ -1,9 +1,5 @@
 package org.github.mansur.oozie
 
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
-import org.custommonkey.xmlunit.Diff
-import org.custommonkey.xmlunit.XMLUnit
 import org.github.mansur.oozie.plugin.OozieWorkflowPlugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -149,20 +145,12 @@ class OozieWorkflowPluginSpec extends Specification {
                     name: "first_map_reduce",
                     type: "mapreduce",
                     delete: ["${jobTracker}/pattern"],
-                    mainClass: "some.random.class",
                     jobXML: "job.xml",
                     ok: "end",
                     error: "fail",
                     configuration: [
                             "mapred.map.output.compress": "false",
                             "mapred.job.queue.name": "queuename"
-                    ],
-                    args: [
-                            "--input",
-                            "/cart",
-                            "--output",
-                            "--maxheapSize",
-                            "50"
                     ]
             ]
 
