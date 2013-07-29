@@ -63,6 +63,15 @@ oozie {
             ]
     ]
 
+    def fork_flow = [
+            name: "fork_flow",
+            type: "fork",
+            paths: [
+                    "move_files",
+                    "mahout_fp_growth"
+            ]
+    ]
+
     def move_files = [
             name: "move_files",
             type: 'fs',
@@ -101,14 +110,7 @@ oozie {
             ]
     ]
 
-    def fork_flow = [
-            name: "fork_flow",
-            type: "fork",
-            paths: [
-                    "move_files",
-                    "mahout_fp_growth"
-            ]
-    ]
+
 
     def join_flow = [
             name: "join_flow",
