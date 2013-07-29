@@ -97,6 +97,6 @@ first_map_reduce = [
 }
 ```
 
-see [build.gradle](https://github.com/MuhammadAshraf/gradle-oozie-plugin/blob/master/example/build.gradle) for a complete workflow
+see [build.gradle](https://github.com/MuhammadAshraf/gradle-oozie-plugin/blob/master/example/build.gradle) and generated [workflow.xml](https://github.com/MuhammadAshraf/gradle-oozie-plugin/blob/master/example/workflow/oozie_flow.xml) for a complete workflow
 
     
