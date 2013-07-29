@@ -85,7 +85,6 @@ first_map_reduce = [
             name: "first_map_reduce",
             type: "mapreduce",
             delete: ["${jobTracker}/pattern"],
-            mainClass: "some.random.class",
             jobXML: "job.xml",
             ok: "end",
             error: "fail",
