@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         maven {
-            url "file://${projectDir}/../repo"
+            url "http://repository-uncommon-configuration.forge.cloudbees.com/release/"
         }
         mavenCentral()
     }
@@ -17,18 +17,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'oozie'
 
-
-repositories {
-    maven {
-        url "https://github.com/MuhammadAshraf/gradle-oozie-plugin/raw/master/repo"
-    }
-    mavenCentral()
-}
-
-dependencies {
-    compile 'org.github.mansur.oozie:gradle-oozie-plugin:0.1'
-
-}
 
 oozie {
     def jobTracker = "http://jobtracker"
@@ -161,13 +149,6 @@ oozie {
             configuration: [
                     "mapred.map.output.compress": "false",
                     "mapred.job.queue.name": "queuename"
-            ],
-            args: [
-                    "--input",
-                    "/cart",
-                    "--output",
-                    "--maxheapSize",
-                    "50"
             ]
     ]
 
