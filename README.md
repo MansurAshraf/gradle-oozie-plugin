@@ -1,31 +1,35 @@
 # Introduction
-gradle-oozie-plugin provides a simple Groovy DSL to create [Apache oozie workflow](http://oozie.apache.org/)
+gradle-oozie-plugin provides a simple Groovy DSL for [Apache oozie workflow](http://oozie.apache.org/) because creating
+flows in XML causes serious brian damage!
 
 # Installation
-maven repo: `http://repository-uncommon-configuration.forge.cloudbees.com/release/`
-groupId: `org.github.mansur.oozie`
-artifactId: `gradle-oozie-plugin`
-version: `0.1`
-
+```
+maven repo: http://repository-uncommon-configuration.forge.cloudbees.com/release/
+groupId: org.github.mansur.oozie
+artifactId: gradle-oozie-plugin
+version: 0.1
+```
 # Supported workflow actions
 Following workflow actions are supported 
-    1. [java](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.7_Java_Action)
-    2. [mapreduce](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.2_Map-Reduce_Action)
-    3. [pig](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.3_Pig_Action)
-    4. [ssh](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.5_Ssh_Action)
-    5. [fs](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.4_Fs_HDFS_action)
-    6. [shell](http://oozie.apache.org/docs/3.3.0/DG_ShellActionExtension.html)
+
+1. [java](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.7_Java_Action)
+2. [mapreduce](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.2_Map-Reduce_Action)
+3. [pig](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.3_Pig_Action)
+4. [ssh](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.5_Ssh_Action)
+5. [fs](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.2.4_Fs_HDFS_action)
+6. [shell](http://oozie.apache.org/docs/3.3.0/DG_ShellActionExtension.html)
     
 In addition following decision nodes are also supported
- 1.[start](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.1_Start_Control_Node)
- 2.[end](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.2_End_Control_Node)
- 3.[kill](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.3_Kill_Control_Node)
- 4.[decision](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.4_Decision_Control_Node)
- 5.[frok and join](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.5_Fork_and_Join_Control_Nodes)
+
+ 1. [start](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.1_Start_Control_Node)
+ 2. [end](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.2_End_Control_Node)
+ 3. [kill](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.3_Kill_Control_Node)
+ 4. [decision](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.4_Decision_Control_Node)
+ 5. [frok and join](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.5_Fork_and_Join_Control_Nodes)
     
 # Useage
 
-```
+```grrovy
 
 buildscript {
     repositories {
@@ -46,7 +50,7 @@ apply plugin: 'oozie'
 ```
 
 
-A complete mapreduce flow in oozie xml looks like this
+This is how a mapreduce flow looks like in XML
 
 ```
 <action name='first_map_reduce'>
@@ -73,7 +77,7 @@ A complete mapreduce flow in oozie xml looks like this
   </action>
 ```
 
-same action in gradle dsl
+and this is the same flow in groovy dsl
 
 ```
 oozie {
