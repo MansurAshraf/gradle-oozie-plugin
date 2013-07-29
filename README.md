@@ -27,7 +27,7 @@ In addition following decision nodes are also supported
  4. [decision](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.4_Decision_Control_Node)
  5. [frok and join](http://oozie.apache.org/docs/3.3.0/WorkflowFunctionalSpec.html#a3.1.5_Fork_and_Join_Control_Nodes)
     
-# Useage
+# Usage
 
 ```grrovy
 
